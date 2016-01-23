@@ -52,7 +52,6 @@ public class ArticleFragment extends Fragment {
 
     private Article article;
     private Medsolutions medsolutions;
-    private static final String IMG_BASE_URL = "http://medsolutions.uxp.ru/images/";
 
     /**
      * Метод на случай, если нам понадобится передавать аргументы при создании фрагмента.
@@ -99,8 +98,8 @@ public class ArticleFragment extends Fragment {
                 Spotlight first = spotlights.get(0);
                 Spotlight second = spotlights.get(1);
 
-                Picasso.with(getActivity()).load(IMG_BASE_URL+first.getImage()).fit().centerCrop().into(spotlightImageview);
-                Picasso.with(getActivity()).load(IMG_BASE_URL+second.getImage()).fit().centerCrop().into(secondSpotlightImageview);
+                Picasso.with(getActivity()).load(first.getImage()).fit().centerCrop().into(spotlightImageview);
+                Picasso.with(getActivity()).load(second.getImage()).fit().centerCrop().into(secondSpotlightImageview);
 
                 spotlightTitleTextview.setText(first.getTitle());
                 secondSpotlightTitleTextview.setText(second.getTitle());
