@@ -13,6 +13,7 @@ public class Spotlight implements Parcelable {
     private String description;
     @SerializedName("created_at")
     private String createdAt;
+    private String thumbnail;
 
     protected Spotlight(Parcel in) {
         id = in.readInt();
@@ -20,6 +21,22 @@ public class Spotlight implements Parcelable {
         image = in.readString();
         description = in.readString();
         createdAt = in.readString();
+        thumbnail = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(image);
+        dest.writeString(description);
+        dest.writeString(createdAt);
+        dest.writeString(thumbnail);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Spotlight> CREATOR = new Creator<Spotlight>() {
@@ -33,20 +50,6 @@ public class Spotlight implements Parcelable {
             return new Spotlight[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(image);
-        dest.writeString(description);
-        dest.writeString(createdAt);
-    }
 
     public String getTitle() {
         return title;
@@ -62,5 +65,9 @@ public class Spotlight implements Parcelable {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
     }
 }

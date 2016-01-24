@@ -124,8 +124,8 @@ public class ArticleFragment extends Fragment {
         spotlightDateTextview.setText(first.getCreatedAt());
         secondSpotlightDateTextview.setText(second.getCreatedAt());
         Picasso.with(getActivity()).load(article.getImage()).fit().centerCrop().into(imageView);
-        Picasso.with(getActivity()).load(first.getImage()).fit().centerCrop().into(spotlightImageview);
-        Picasso.with(getActivity()).load(second.getImage()).fit().centerCrop().into(secondSpotlightImageview);
+        Picasso.with(getActivity()).load(first.getThumbnail()).fit().centerCrop().into(spotlightImageview);
+        Picasso.with(getActivity()).load(second.getThumbnail()).fit().centerCrop().into(secondSpotlightImageview);
     }
 
     @Override

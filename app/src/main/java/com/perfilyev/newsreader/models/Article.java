@@ -98,4 +98,8 @@ public class Article implements Parcelable {
     public String getSource() {
         return source;
     }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
 }

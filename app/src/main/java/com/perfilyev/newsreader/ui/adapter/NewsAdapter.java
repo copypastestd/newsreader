@@ -80,7 +80,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             this.article = article;
             titleTv.setText(article.getTitle());
             dateTv.setText(article.getDate());
-            Picasso.with(thumbnailIv.getContext()).load(article.getImage()).fit().centerCrop().into(thumbnailIv);
+            Picasso.with(thumbnailIv.getContext()).load(article.getThumbnail()).fit().centerCrop().into(thumbnailIv);
         }
 
         @Override
