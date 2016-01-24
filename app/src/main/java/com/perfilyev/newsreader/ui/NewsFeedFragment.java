@@ -1,6 +1,7 @@
 package com.perfilyev.newsreader.ui;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class NewsFeedFragment extends Fragment {
 
     private NewsAdapter adapter;
     private Medsolutions medsolutions;
-    private ArrayList<Article> articleList = new ArrayList<>();
+    private List<Article> articleList = new ArrayList<>();
     public static final String KEY = "com.perfilyev.newsreader.ui.NewsFeedFragment";
 
     @Override
@@ -48,6 +49,7 @@ public class NewsFeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         medsolutions = new Medsolutions();
+        medsolutions.loadNewsFeed(1);
     }
 
     /**
@@ -89,6 +91,7 @@ public class NewsFeedFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
@@ -106,7 +109,7 @@ public class NewsFeedFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY, articleList);
+        outState.putParcelableArrayList(KEY, new ArrayList<Parcelable>(articleList));
     }
 
 

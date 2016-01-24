@@ -59,7 +59,6 @@ public class Medsolutions {
                 .build();
         service = retrofit.create(MedsolutionsService.class);
         listener = null;
-        loadNewsFeed(PAGE);
     }
 
     public void setListener(NewsUpdatedListener listener) {
