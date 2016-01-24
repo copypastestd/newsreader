@@ -40,16 +40,19 @@ public class NewsFeedFragment extends Fragment {
 
     private NewsAdapter adapter;
     private Medsolutions medsolutions;
-    private List<Article> articleList = new ArrayList<>();
+    private ArrayList<Article> articleList = new ArrayList<>();
+    public static final String KEY = "com.perfilyev.newsreader.ui.NewsFeedFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        medsolutions = new Medsolutions();
     }
 
     /**
      * Метод на случай, если нам понадобится передавать аргументы при создании фрагмента.
+     *
      * @return фрагмент с аргументами.
      */
     public static NewsFeedFragment newInstance() {
@@ -65,21 +68,24 @@ public class NewsFeedFragment extends Fragment {
         progress.setVisibility(ProgressBar.VISIBLE);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         adapter = new NewsAdapter(getActivity(), articleList);
-        medsolutions = new Medsolutions();
-        medsolutions.setListener(new Medsolutions.NewsUpdatedListener() {
-            @Override
-            public void onNewsLoaded(List<Article> articles) {
-                int curSize = adapter.getItemCount();
-                articleList.addAll(articles);
-                adapter.notifyItemRangeInserted(curSize, articleList.size() - 1);
-                progress.setVisibility(ProgressBar.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
+        if (savedInstanceState == null) {
+            medsolutions.setListener(new Medsolutions.NewsUpdatedListener() {
+                @Override
+                public void onNewsLoaded(List<Article> articles) {
+                    int curSize = adapter.getItemCount();
+                    articleList.addAll(articles);
+                    adapter.notifyItemRangeInserted(curSize, articleList.size() - 1);
+                    showRecyclerView();
+                }
 
-            @Override
-            public void onArticleLoaded(List<Article> articles, List<Spotlight> spotlights) {
-            }
-        });
+                @Override
+                public void onArticleLoaded(List<Article> articles, List<Spotlight> spotlights) {
+                }
+            });
+        } else {
+            articleList = savedInstanceState.getParcelableArrayList(KEY);
+            showRecyclerView();
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
@@ -92,10 +98,21 @@ public class NewsFeedFragment extends Fragment {
         return rootView;
     }
 
+    private void showRecyclerView() {
+        progress.setVisibility(ProgressBar.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY, articleList);
+    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-
 }

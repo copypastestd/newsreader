@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,10 +52,19 @@ public class ArticleFragment extends Fragment {
     TextView secondSpotlightDateTextview;
 
     private Article article;
+    private Article articleDetails;
+    private Spotlight first;
+    private Spotlight second;
     private Medsolutions medsolutions;
+    public static final String ARTICLE_KEY = "com.perfilyev.newsreader.ui.ArticleFragment.article";
+    public static final String ARTICLE_DETAILS_KEY = "com.perfilyev.newsreader.ui.ArticleFragment.articleDetails";
+    public static final String SPOTLIGHT_KEY = "com.perfilyev.newsreader.ui.ArticleFragment.spotlight";
+    public static final String SECOND_SPOTLIGHT_KEY = "com.perfilyev.newsreader.ui.ArticleFragment.secondSpotlight";
+    private static final String TAG = ArticleFragment.class.getSimpleName();
 
     /**
      * Метод на случай, если нам понадобится передавать аргументы при создании фрагмента.
+     *
      * @return фрагмент с аргументами.
      */
     public static ArticleFragment newInstance() {
@@ -79,36 +89,52 @@ public class ArticleFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Picasso.with(getActivity()).load(article.getImage()).fit().centerCrop().into(imageView);
-        medsolutions.setListener(new Medsolutions.NewsUpdatedListener() {
-            @Override
-            public void onNewsLoaded(List<Article> articles) {
-            }
+        if (savedInstanceState == null) {
+            medsolutions.setListener(new Medsolutions.NewsUpdatedListener() {
+                @Override
+                public void onNewsLoaded(List<Article> articles) {
+                }
 
-            @Override
-            public void onArticleLoaded(List<Article> articles, List<Spotlight> spotlights) {
-                Article articleDetails = articles.get(0);
-
-                articleBodyTv.setText(articleDetails.getText());
-                articleSourceTv.setText(articleDetails.getSource());
-                articleDateTv.setText(article.getDate());
-
-                Spotlight first = spotlights.get(0);
-                Spotlight second = spotlights.get(1);
-
-                Picasso.with(getActivity()).load(first.getImage()).fit().centerCrop().into(spotlightImageview);
-                Picasso.with(getActivity()).load(second.getImage()).fit().centerCrop().into(secondSpotlightImageview);
-
-                spotlightTitleTextview.setText(first.getTitle());
-                secondSpotlightTitleTextview.setText(second.getTitle());
-
-                spotlightDateTextview.setText(first.getCreatedAt());
-                secondSpotlightDateTextview.setText(second.getCreatedAt());
-            }
-        });
+                @Override
+                public void onArticleLoaded(List<Article> articles, List<Spotlight> spotlights) {
+                    articleDetails = articles.get(0);
+                    first = spotlights.get(0);
+                    second = spotlights.get(1);
+                    setFields();
+                }
+            });
+        } else {
+            article = savedInstanceState.getParcelable(ARTICLE_KEY);
+            articleDetails = savedInstanceState.getParcelable(ARTICLE_DETAILS_KEY);
+            first = savedInstanceState.getParcelable(SPOTLIGHT_KEY);
+            second = savedInstanceState.getParcelable(SECOND_SPOTLIGHT_KEY);
+            setFields();
+        }
         return rootView;
+    }
+
+    private void setFields() {
+        articleBodyTv.setText(articleDetails.getText());
+        articleSourceTv.setText(articleDetails.getSource());
+        articleDateTv.setText(article.getDate());
+        spotlightTitleTextview.setText(first.getTitle());
+        secondSpotlightTitleTextview.setText(second.getTitle());
+        spotlightDateTextview.setText(first.getCreatedAt());
+        secondSpotlightDateTextview.setText(second.getCreatedAt());
+        Picasso.with(getActivity()).load(article.getImage()).fit().centerCrop().into(imageView);
+        Picasso.with(getActivity()).load(first.getImage()).fit().centerCrop().into(spotlightImageview);
+        Picasso.with(getActivity()).load(second.getImage()).fit().centerCrop().into(secondSpotlightImageview);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(ARTICLE_KEY, article);
+        outState.putParcelable(ARTICLE_DETAILS_KEY, articleDetails);
+        outState.putParcelable(SPOTLIGHT_KEY, first);
+        outState.putParcelable(SECOND_SPOTLIGHT_KEY, second);
     }
 
     @Override
